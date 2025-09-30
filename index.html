@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sniptly - Plain Text Writing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,8 +20,8 @@
             --border-color: #e8e8e8;
             --text-primary: #1a1a1a;
             --text-secondary: #737373;
-            --accent: #0ea5e9;
-            --accent-hover: #0284c7;
+            --accent: #f97316;
+            --accent-hover: #ea580c;
             --sidebar-width: 240px;
         }
 
@@ -28,12 +31,12 @@
             --border-color: #2a2a2a;
             --text-primary: #e5e5e5;
             --text-secondary: #a3a3a3;
-            --accent: #38bdf8;
-            --accent-hover: #7dd3fc;
+            --accent: #fb923c;
+            --accent-hover: #fdba74;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
             min-height: 100vh;
             background: var(--bg-primary);
             color: var(--text-primary);
@@ -106,6 +109,7 @@
             display: flex;
             flex: 1;
             min-height: 0;
+            position: relative;
         }
 
         /* Left Sidebar - File List */
@@ -241,10 +245,16 @@
             font-size: 40px;
             font-weight: 700;
             margin-bottom: 32px;
-            font-family: 'Charter', 'Georgia', 'Iowan Old Style', 'Apple Garamond', 'Baskerville', serif;
+            font-family: 'Noto Serif', 'Charter', 'Georgia', serif;
             color: var(--text-primary);
             background: var(--bg-primary);
             letter-spacing: -0.02em;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            line-height: 1.2;
+            resize: none;
+            overflow: hidden;
+            min-height: 48px;
         }
 
         .editor-title::placeholder {
@@ -258,8 +268,8 @@
             outline: none;
             resize: none;
             font-size: 18px;
-            line-height: 1.8;
-            font-family: 'Charter', 'Georgia', 'Iowan Old Style', 'Apple Garamond', 'Baskerville', serif;
+            line-height: 1.9;
+            font-family: 'Noto Serif', 'Charter', 'Georgia', serif;
             color: var(--text-primary);
             background: var(--bg-primary);
             letter-spacing: 0.01em;
@@ -285,23 +295,361 @@
             margin: 0 12px;
         }
 
-        /* Right Sidebar - Future AI Assistant */
-        .sidebar-right {
-            width: var(--sidebar-width);
-            background: var(--bg-secondary);
+        /* Output Panel - Generated Content */
+        .output-panel {
+            width: 400px;
+            background: var(--bg-primary);
             border-left: 1px solid var(--border-color);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+            display: none;
+            flex-direction: column;
             min-height: 0;
             max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .output-panel.show {
+            display: flex;
+        }
+
+        .output-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .output-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .output-panel::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .output-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        .output-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .output-panel-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-panel-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .close-panel-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .output-content {
+            flex: 1;
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            font-family: 'Noto Serif', 'Charter', 'Georgia', serif;
+        }
+
+        .output-panel-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .output-panel-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .output-panel-btn:hover {
+            background: var(--border-color);
+        }
+
+        .output-panel-btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .output-panel-btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        /* Right Sidebar - AI Functions */
+        .sidebar-right {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .sidebar-right::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar-right::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-right::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .sidebar-right::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        .ai-functions-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ai-functions-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .add-prompt-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .add-prompt-btn:hover {
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .prompt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .prompt-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prompt-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .prompt-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .prompt-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .prompt-item-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .prompt-item:hover .prompt-item-actions {
+            opacity: 1;
+        }
+
+        .prompt-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .prompt-action-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .prompt-item-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .prompt-form {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .prompt-form-group {
+            margin-bottom: 12px;
+        }
+
+        .prompt-form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .prompt-form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .prompt-form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        .prompt-form-textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'Noto Sans', sans-serif;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .prompt-form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .prompt-form-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prompt-form-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .prompt-form-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .prompt-form-btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .prompt-form-btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .run-prompt-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .run-prompt-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .run-prompt-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .coming-soon {
             color: var(--text-secondary);
             font-size: 14px;
             text-align: center;
+        }
+
+        .hidden {
+            display: none;
         }
 
         /* Empty State */
@@ -330,7 +678,7 @@
 <body>
     <!-- Header Bar -->
     <header class="header-bar">
-        <h1>Niva</h1>
+        <h1>Sniptly</h1>
         <div class="header-controls">
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span id="themeIcon">☀️</span>
@@ -348,16 +696,61 @@
         <!-- Center Editor Panel -->
         <main class="editor-panel" id="editorPanel">
             <div class="empty-state">
-                <h2>Welcome to Niva</h2>
+                <h2>Welcome to Sniptly</h2>
                 <p>Create a new file to start writing</p>
             </div>
         </main>
 
+        <!-- Output Panel -->
+        <aside class="output-panel" id="outputPanel">
+            <div class="output-panel-header">
+                <h3 id="outputPanelTitle">Generated Output</h3>
+                <button class="close-panel-btn" onclick="closeOutputPanel()" aria-label="Close panel">×</button>
+            </div>
+            <div class="output-content" id="outputContent"></div>
+            <div class="output-panel-actions">
+                <button class="output-panel-btn" onclick="copyOutput()">Copy</button>
+                <button class="output-panel-btn output-panel-btn-primary" onclick="createFileFromOutput()">Save as New File</button>
+            </div>
+        </aside>
+
         <!-- Right Sidebar -->
-        <aside class="sidebar-right">
-            <div class="coming-soon">
-                <p>AI Assistant</p>
-                <p style="margin-top: 8px; font-size: 12px;">Coming in v2</p>
+        <aside class="sidebar-right" id="aiSidebar">
+            <div class="ai-functions-header">
+                <h3>AI Functions</h3>
+                <button class="add-prompt-btn" onclick="showPromptForm()" aria-label="Add prompt">+</button>
+            </div>
+
+            <!-- Prompt Form (hidden by default) -->
+            <div id="promptForm" class="prompt-form hidden">
+                <div class="prompt-form-group">
+                    <label class="prompt-form-label" for="promptName">Name</label>
+                    <input type="text" id="promptName" class="prompt-form-input" placeholder="e.g., Tweet Generator">
+                </div>
+                <div class="prompt-form-group">
+                    <label class="prompt-form-label" for="promptDescription">Description</label>
+                    <input type="text" id="promptDescription" class="prompt-form-input" placeholder="Generate a tweet from the article">
+                </div>
+                <div class="prompt-form-group">
+                    <label class="prompt-form-label" for="promptTemplate">Prompt Template</label>
+                    <textarea id="promptTemplate" class="prompt-form-textarea" placeholder="Take the following article and create an engaging tweet. Keep it under 280 characters..."></textarea>
+                </div>
+                <div class="prompt-form-actions">
+                    <button class="prompt-form-btn prompt-form-btn-secondary" onclick="hidePromptForm()">Cancel</button>
+                    <button class="prompt-form-btn prompt-form-btn-primary" onclick="savePrompt()">Save</button>
+                </div>
+            </div>
+
+            <!-- Prompt List -->
+            <div id="promptList" class="prompt-list">
+                <!-- Prompts will be listed here -->
+            </div>
+
+            <!-- Selected Prompt Actions -->
+            <div id="promptActions" class="hidden">
+                <button class="run-prompt-btn" onclick="runPrompt()" id="runPromptBtn">
+                    Generate with AI
+                </button>
             </div>
         </aside>
     </div>
@@ -366,10 +759,13 @@
         // Simple in-memory storage
         let files = [];
         let activeFileId = null;
+        let prompts = [];
+        let selectedPromptId = null;
+        let editingPromptId = null;
 
         // Load files from localStorage on startup
         function loadFiles() {
-            const saved = localStorage.getItem('niva-files');
+            const saved = localStorage.getItem('sniptly-files');
             if (saved) {
                 files = JSON.parse(saved);
                 renderFileList();
@@ -381,7 +777,7 @@
 
         // Save files to localStorage
         function saveFiles() {
-            localStorage.setItem('niva-files', JSON.stringify(files));
+            localStorage.setItem('sniptly-files', JSON.stringify(files));
         }
 
         // Create a new file
@@ -441,11 +837,10 @@
 
             const editorPanel = document.getElementById('editorPanel');
             editorPanel.innerHTML = `
-                <input type="text"
-                       class="editor-title"
+                <textarea class="editor-title"
                        placeholder="Untitled"
-                       value="${file.title || ''}"
-                       oninput="updateTitle(${fileId}, this.value)">
+                       oninput="updateTitle(${fileId}, this.value); autoResize(this);"
+                       rows="1">${file.title || ''}</textarea>
                 <textarea class="editor-content"
                           placeholder="Start writing..."
                           oninput="updateContent(${fileId}, this.value)">${file.content || ''}</textarea>
@@ -459,14 +854,17 @@
             updateWordCount(fileId);
 
             // Add event listener for real-time word count updates
-            const textarea = editorPanel.querySelector('.editor-content');
-            textarea.addEventListener('input', () => {
+            const titleTextarea = editorPanel.querySelector('.editor-title');
+            const contentTextarea = editorPanel.querySelector('.editor-content');
+
+            contentTextarea.addEventListener('input', () => {
                 updateWordCount(fileId);
-                autoResize(textarea);
+                autoResize(contentTextarea);
             });
 
-            // Initial resize
-            autoResize(textarea);
+            // Initial resize for both textareas
+            autoResize(titleTextarea);
+            autoResize(contentTextarea);
         }
 
         // Auto-resize textarea to fit content
@@ -515,7 +913,7 @@
 
         // Theme management
         function loadTheme() {
-            const savedTheme = localStorage.getItem('niva-theme') || 'light';
+            const savedTheme = localStorage.getItem('sniptly-theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
         }
@@ -524,7 +922,7 @@
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('niva-theme', newTheme);
+            localStorage.setItem('sniptly-theme', newTheme);
             updateThemeIcon(newTheme);
         }
 
@@ -534,9 +932,225 @@
             icon.textContent = theme === 'light' ? '○' : '●';
         }
 
+        // ===== AI Functions =====
+
+        // Load prompts from localStorage
+        function loadPrompts() {
+            const saved = localStorage.getItem('sniptly-prompts');
+            if (saved) {
+                prompts = JSON.parse(saved);
+            } else {
+                // Default prompts
+                prompts = [
+                    {
+                        id: 1,
+                        name: 'Tweet Generator',
+                        description: 'Create an engaging tweet',
+                        template: 'Take the following text and create an engaging tweet. Keep it under 280 characters and make it catchy:\n\n{TEXT}'
+                    },
+                    {
+                        id: 2,
+                        name: 'LinkedIn Hook',
+                        description: 'Generate a LinkedIn post hook',
+                        template: 'Create a compelling first line (hook) for a LinkedIn post based on this content. Make it attention-grabbing:\n\n{TEXT}'
+                    },
+                    {
+                        id: 3,
+                        name: 'YouTube Title',
+                        description: 'Generate a YouTube video title',
+                        template: 'Create 3 clickworthy YouTube video titles based on this content:\n\n{TEXT}'
+                    }
+                ];
+                savePrompts();
+            }
+            renderPromptList();
+        }
+
+        // Save prompts to localStorage
+        function savePrompts() {
+            localStorage.setItem('sniptly-prompts', JSON.stringify(prompts));
+        }
+
+        // Render prompt list
+        function renderPromptList() {
+            const promptList = document.getElementById('promptList');
+            promptList.innerHTML = prompts.map(prompt => `
+                <div class="prompt-item ${prompt.id === selectedPromptId ? 'active' : ''}"
+                     onclick="selectPrompt(${prompt.id})">
+                    <div class="prompt-item-header">
+                        <span class="prompt-item-title">${prompt.name}</span>
+                        <div class="prompt-item-actions">
+                            <button class="prompt-action-btn" onclick="event.stopPropagation(); editPrompt(${prompt.id})" aria-label="Edit">✎</button>
+                            <button class="prompt-action-btn" onclick="event.stopPropagation(); deletePrompt(${prompt.id})" aria-label="Delete">×</button>
+                        </div>
+                    </div>
+                    <div class="prompt-item-description">${prompt.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Show prompt form
+        function showPromptForm() {
+            document.getElementById('promptForm').classList.remove('hidden');
+            document.getElementById('promptName').value = '';
+            document.getElementById('promptDescription').value = '';
+            document.getElementById('promptTemplate').value = '';
+            editingPromptId = null;
+        }
+
+        // Hide prompt form
+        function hidePromptForm() {
+            document.getElementById('promptForm').classList.add('hidden');
+            editingPromptId = null;
+        }
+
+        // Save prompt
+        function savePrompt() {
+            const name = document.getElementById('promptName').value.trim();
+            const description = document.getElementById('promptDescription').value.trim();
+            const template = document.getElementById('promptTemplate').value.trim();
+
+            if (!name || !template) {
+                alert('Please enter a name and prompt template');
+                return;
+            }
+
+            if (editingPromptId) {
+                // Edit existing prompt
+                const prompt = prompts.find(p => p.id === editingPromptId);
+                if (prompt) {
+                    prompt.name = name;
+                    prompt.description = description;
+                    prompt.template = template;
+                }
+            } else {
+                // Create new prompt
+                const prompt = {
+                    id: Date.now(),
+                    name,
+                    description,
+                    template
+                };
+                prompts.push(prompt);
+            }
+
+            savePrompts();
+            renderPromptList();
+            hidePromptForm();
+        }
+
+        // Edit prompt
+        function editPrompt(promptId) {
+            const prompt = prompts.find(p => p.id === promptId);
+            if (!prompt) return;
+
+            editingPromptId = promptId;
+            document.getElementById('promptName').value = prompt.name;
+            document.getElementById('promptDescription').value = prompt.description || '';
+            document.getElementById('promptTemplate').value = prompt.template;
+            document.getElementById('promptForm').classList.remove('hidden');
+        }
+
+        // Delete prompt
+        function deletePrompt(promptId) {
+            if (confirm('Are you sure you want to delete this prompt?')) {
+                const index = prompts.findIndex(p => p.id === promptId);
+                prompts.splice(index, 1);
+                savePrompts();
+                renderPromptList();
+                if (selectedPromptId === promptId) {
+                    selectedPromptId = null;
+                    document.getElementById('promptActions').classList.add('hidden');
+                    closeOutputPanel();
+                }
+            }
+        }
+
+        // Select prompt
+        function selectPrompt(promptId) {
+            selectedPromptId = promptId;
+            renderPromptList();
+            document.getElementById('promptActions').classList.remove('hidden');
+        }
+
+        // Close output panel
+        function closeOutputPanel() {
+            document.getElementById('outputPanel').classList.remove('show');
+        }
+
+        // Run prompt (simulate AI generation)
+        function runPrompt() {
+            if (!selectedPromptId || !activeFileId) {
+                alert('Please select a file and a prompt');
+                return;
+            }
+
+            const prompt = prompts.find(p => p.id === selectedPromptId);
+            const file = files.find(f => f.id === activeFileId);
+
+            if (!prompt || !file) return;
+
+            const runBtn = document.getElementById('runPromptBtn');
+            runBtn.disabled = true;
+            runBtn.textContent = 'Generating...';
+
+            // Show output panel
+            document.getElementById('outputPanel').classList.add('show');
+            document.getElementById('outputPanelTitle').textContent = prompt.name;
+            document.getElementById('outputContent').textContent = 'Generating...';
+
+            // Simulate AI generation (replace with actual API call)
+            setTimeout(() => {
+                const fullPrompt = prompt.template.replace('{TEXT}', file.content);
+
+                // Simulated output (in production, this would call an AI API)
+                let output = '';
+                if (prompt.name.includes('Tweet')) {
+                    output = `🚀 Just discovered something amazing! ${file.title} is a game-changer. Here's why you should care... #innovation #tech`;
+                } else if (prompt.name.includes('LinkedIn')) {
+                    output = `Here's the truth nobody tells you about ${file.title}...`;
+                } else if (prompt.name.includes('YouTube')) {
+                    output = `1. "${file.title}: The Complete Guide (2024)"\n2. "Why ${file.title} Changed Everything"\n3. "I Tried ${file.title} For 30 Days - Here's What Happened"`;
+                } else {
+                    output = `Generated content based on: "${file.title}"\n\nThis is a simulated response. In production, this would call an AI API with the prompt:\n\n${fullPrompt}`;
+                }
+
+                document.getElementById('outputContent').textContent = output;
+                runBtn.disabled = false;
+                runBtn.textContent = 'Generate with AI';
+            }, 1500);
+        }
+
+        // Copy output to clipboard
+        function copyOutput() {
+            const output = document.getElementById('outputContent').textContent;
+            navigator.clipboard.writeText(output).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        // Create new file from output
+        function createFileFromOutput() {
+            const output = document.getElementById('outputContent').textContent;
+            const prompt = prompts.find(p => p.id === selectedPromptId);
+
+            const file = {
+                id: Date.now(),
+                title: prompt ? `Generated: ${prompt.name}` : 'Generated Content',
+                content: output,
+                created: new Date().toISOString()
+            };
+            files.unshift(file);
+            saveFiles();
+            renderFileList();
+            openFile(file.id);
+            closeOutputPanel();
+        }
+
         // Initialize app
         loadTheme();
         loadFiles();
+        loadPrompts();
     </script>
 </body>
 </html>

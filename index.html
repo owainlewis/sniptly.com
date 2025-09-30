@@ -6,7 +6,7 @@
     <title>Sniptly - Plain Text Writing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -20,23 +20,23 @@
             --border-color: #e8e8e8;
             --text-primary: #1a1a1a;
             --text-secondary: #737373;
-            --accent: #f97316;
-            --accent-hover: #ea580c;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
             --sidebar-width: 240px;
         }
 
         [data-theme="dark"] {
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #242424;
-            --border-color: #2a2a2a;
-            --text-primary: #e5e5e5;
-            --text-secondary: #a3a3a3;
-            --accent: #fb923c;
-            --accent-hover: #fdba74;
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --border-color: #2d2d2d;
+            --text-primary: #ececec;
+            --text-secondary: #a1a1a1;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
         }
 
         body {
-            font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             min-height: 100vh;
             background: var(--bg-primary);
             color: var(--text-primary);
@@ -108,8 +108,9 @@
         .container {
             display: flex;
             flex: 1;
-            min-height: 0;
             position: relative;
+            overflow: hidden;
+            height: calc(100vh - 64px);
         }
 
         /* Left Sidebar - File List */
@@ -119,8 +120,7 @@
             border-right: 1px solid var(--border-color);
             overflow-y: auto;
             padding: 12px;
-            min-height: 0;
-            max-height: calc(100vh - 64px);
+            flex-shrink: 0;
         }
 
         /* Custom scrollbar styling */
@@ -230,12 +230,16 @@
         /* Center Panel - Editor */
         .editor-panel {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 60px 40px;
+            overflow-y: auto;
             background: var(--bg-primary);
+            display: flex;
+            justify-content: center;
+        }
+
+        .editor-wrapper {
+            max-width: 800px;
+            width: 100%;
+            padding: 60px 40px;
         }
 
         .editor-title {
@@ -243,12 +247,12 @@
             border: none;
             outline: none;
             font-size: 40px;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 32px;
-            font-family: 'Noto Serif', 'Charter', 'Georgia', serif;
+            font-family: 'Source Serif 4', 'Georgia', serif;
             color: var(--text-primary);
             background: var(--bg-primary);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
             overflow-wrap: break-word;
             word-wrap: break-word;
             line-height: 1.2;
@@ -268,11 +272,11 @@
             outline: none;
             resize: none;
             font-size: 18px;
-            line-height: 1.9;
-            font-family: 'Noto Serif', 'Charter', 'Georgia', serif;
+            line-height: 1.8;
+            font-family: 'Source Serif 4', 'Georgia', serif;
             color: var(--text-primary);
             background: var(--bg-primary);
-            letter-spacing: 0.01em;
+            letter-spacing: 0;
             min-height: 400px;
             overflow: hidden;
         }
@@ -300,13 +304,11 @@
             width: 400px;
             background: var(--bg-primary);
             border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
             padding: 24px;
             display: none;
             flex-direction: column;
-            min-height: 0;
-            max-height: calc(100vh - 64px);
             overflow-y: auto;
+            flex-shrink: 0;
         }
 
         .output-panel.show {
@@ -368,7 +370,7 @@
             line-height: 1.8;
             color: var(--text-primary);
             white-space: pre-wrap;
-            font-family: 'Noto Serif', 'Charter', 'Georgia', serif;
+            font-family: 'Source Serif 4', 'Georgia', serif;
         }
 
         .output-panel-actions {
@@ -409,15 +411,14 @@
 
         /* Right Sidebar - AI Functions */
         .sidebar-right {
-            width: 280px;
+            width: 320px;
             background: var(--bg-secondary);
             border-left: 1px solid var(--border-color);
             padding: 16px;
             display: flex;
             flex-direction: column;
-            min-height: 0;
-            max-height: calc(100vh - 64px);
             overflow-y: auto;
+            flex-shrink: 0;
         }
 
         .sidebar-right::-webkit-scrollbar {
@@ -567,7 +568,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             font-size: 13px;
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .prompt-form-textarea {
@@ -578,7 +579,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             font-size: 13px;
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             resize: vertical;
             min-height: 80px;
         }
@@ -673,6 +674,145 @@
         .empty-state p {
             font-size: 16px;
         }
+
+        /* API Key Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-body p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .modal-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .modal-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+        .api-status.configured {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .api-status.not-configured {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
     </style>
 </head>
 <body>
@@ -680,6 +820,9 @@
     <header class="header-bar">
         <h1>Sniptly</h1>
         <div class="header-controls">
+            <button class="theme-toggle" onclick="showApiKeyModal()" aria-label="API Settings" title="Claude API Key">
+                🔑
+            </button>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
                 <span id="themeIcon">☀️</span>
             </button>
@@ -716,24 +859,39 @@
 
         <!-- Right Sidebar -->
         <aside class="sidebar-right" id="aiSidebar">
+            <!-- Quick Ask AI Section -->
+            <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+                <h3 style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">Ask AI</h3>
+                <div style="margin-bottom: 12px; font-size: 11px; color: var(--text-secondary); line-height: 1.5;">
+                    💡 Use <code style="background: var(--bg-secondary); padding: 2px 4px; border-radius: 3px; font-family: monospace;">@title</code> or <code style="background: var(--bg-secondary); padding: 2px 4px; border-radius: 3px; font-family: monospace;">@doc</code>
+                </div>
+                <textarea id="freetextPrompt"
+                          placeholder="Ask anything about your document..."
+                          style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); font-size: 13px; font-family: 'Inter', sans-serif; resize: vertical; min-height: 80px; margin-bottom: 8px;"></textarea>
+                <button class="run-prompt-btn" onclick="runFreetextPrompt()" id="freetextBtn">
+                    Ask AI
+                </button>
+            </div>
+
             <div class="ai-functions-header">
-                <h3>AI Functions</h3>
+                <h3>Saved Functions</h3>
                 <button class="add-prompt-btn" onclick="showPromptForm()" aria-label="Add prompt">+</button>
             </div>
 
             <!-- Prompt Form (hidden by default) -->
             <div id="promptForm" class="prompt-form hidden">
                 <div class="prompt-form-group">
-                    <label class="prompt-form-label" for="promptName">Name</label>
+                    <label class="prompt-form-label" for="promptName">Function Name</label>
                     <input type="text" id="promptName" class="prompt-form-input" placeholder="e.g., Tweet Generator">
                 </div>
                 <div class="prompt-form-group">
-                    <label class="prompt-form-label" for="promptDescription">Description</label>
-                    <input type="text" id="promptDescription" class="prompt-form-input" placeholder="Generate a tweet from the article">
-                </div>
-                <div class="prompt-form-group">
-                    <label class="prompt-form-label" for="promptTemplate">Prompt Template</label>
-                    <textarea id="promptTemplate" class="prompt-form-textarea" placeholder="Take the following article and create an engaging tweet. Keep it under 280 characters..."></textarea>
+                    <label class="prompt-form-label" for="promptFileId">Prompt Document</label>
+                    <select id="promptFileId" class="prompt-form-input" style="cursor: pointer;">
+                        <option value="">Select a document...</option>
+                    </select>
+                    <div style="margin-top: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.5;">
+                        💡 The selected document will be used as the prompt template. Use <code style="background: var(--bg-secondary); padding: 2px 4px; border-radius: 3px; font-family: monospace;">@title</code> and <code style="background: var(--bg-secondary); padding: 2px 4px; border-radius: 3px; font-family: monospace;">@doc</code> in your prompt to reference the active document.
+                    </div>
                 </div>
                 <div class="prompt-form-actions">
                     <button class="prompt-form-btn prompt-form-btn-secondary" onclick="hidePromptForm()">Cancel</button>
@@ -753,6 +911,29 @@
                 </button>
             </div>
         </aside>
+    </div>
+
+    <!-- API Key Modal -->
+    <div class="modal-overlay" id="apiKeyModal" onclick="closeApiKeyModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Claude API Key</h2>
+                <button class="modal-close" onclick="closeApiKeyModal()" aria-label="Close">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your Anthropic API key to enable AI features. Your key is stored locally in your browser and never sent to our servers.</p>
+                <input type="password"
+                       id="apiKeyInput"
+                       class="modal-input"
+                       placeholder="sk-ant-..."
+                       value="">
+                <div id="apiKeyStatus"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="clearApiKey()">Clear Key</button>
+                <button class="modal-btn modal-btn-primary" onclick="saveApiKey()">Save</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -837,17 +1018,19 @@
 
             const editorPanel = document.getElementById('editorPanel');
             editorPanel.innerHTML = `
-                <textarea class="editor-title"
-                       placeholder="Untitled"
-                       oninput="updateTitle(${fileId}, this.value); autoResize(this);"
-                       rows="1">${file.title || ''}</textarea>
-                <textarea class="editor-content"
-                          placeholder="Start writing..."
-                          oninput="updateContent(${fileId}, this.value)">${file.content || ''}</textarea>
-                <div class="word-count" id="wordCount">
-                    <span>0 words</span>
-                    <span>•</span>
-                    <span>0 characters</span>
+                <div class="editor-wrapper">
+                    <textarea class="editor-title"
+                           placeholder="Untitled"
+                           oninput="updateTitle(${fileId}, this.value); autoResize(this);"
+                           rows="1">${file.title || ''}</textarea>
+                    <textarea class="editor-content"
+                              placeholder="Start writing..."
+                              oninput="updateContent(${fileId}, this.value); autoResize(this);">${file.content || ''}</textarea>
+                    <div class="word-count" id="wordCount">
+                        <span>0 words</span>
+                        <span>•</span>
+                        <span>0 characters</span>
+                    </div>
                 </div>
             `;
             renderFileList();
@@ -940,27 +1123,8 @@
             if (saved) {
                 prompts = JSON.parse(saved);
             } else {
-                // Default prompts
-                prompts = [
-                    {
-                        id: 1,
-                        name: 'Tweet Generator',
-                        description: 'Create an engaging tweet',
-                        template: 'Take the following text and create an engaging tweet. Keep it under 280 characters and make it catchy:\n\n{TEXT}'
-                    },
-                    {
-                        id: 2,
-                        name: 'LinkedIn Hook',
-                        description: 'Generate a LinkedIn post hook',
-                        template: 'Create a compelling first line (hook) for a LinkedIn post based on this content. Make it attention-grabbing:\n\n{TEXT}'
-                    },
-                    {
-                        id: 3,
-                        name: 'YouTube Title',
-                        description: 'Generate a YouTube video title',
-                        template: 'Create 3 clickworthy YouTube video titles based on this content:\n\n{TEXT}'
-                    }
-                ];
+                // Default prompts - now reference file IDs
+                prompts = [];
                 savePrompts();
             }
             renderPromptList();
@@ -974,27 +1138,35 @@
         // Render prompt list
         function renderPromptList() {
             const promptList = document.getElementById('promptList');
-            promptList.innerHTML = prompts.map(prompt => `
-                <div class="prompt-item ${prompt.id === selectedPromptId ? 'active' : ''}"
-                     onclick="selectPrompt(${prompt.id})">
-                    <div class="prompt-item-header">
-                        <span class="prompt-item-title">${prompt.name}</span>
-                        <div class="prompt-item-actions">
-                            <button class="prompt-action-btn" onclick="event.stopPropagation(); editPrompt(${prompt.id})" aria-label="Edit">✎</button>
-                            <button class="prompt-action-btn" onclick="event.stopPropagation(); deletePrompt(${prompt.id})" aria-label="Delete">×</button>
+            promptList.innerHTML = prompts.map(prompt => {
+                const file = files.find(f => f.id === prompt.fileId);
+                const fileName = file ? file.title : '[File not found]';
+                return `
+                    <div class="prompt-item ${prompt.id === selectedPromptId ? 'active' : ''}"
+                         onclick="selectPrompt(${prompt.id})">
+                        <div class="prompt-item-header">
+                            <span class="prompt-item-title">${prompt.name}</span>
+                            <div class="prompt-item-actions">
+                                <button class="prompt-action-btn" onclick="event.stopPropagation(); editPrompt(${prompt.id})" aria-label="Edit">✎</button>
+                                <button class="prompt-action-btn" onclick="event.stopPropagation(); deletePrompt(${prompt.id})" aria-label="Delete">×</button>
+                            </div>
                         </div>
+                        <div class="prompt-item-description">📄 ${fileName}</div>
                     </div>
-                    <div class="prompt-item-description">${prompt.description}</div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Show prompt form
         function showPromptForm() {
             document.getElementById('promptForm').classList.remove('hidden');
             document.getElementById('promptName').value = '';
-            document.getElementById('promptDescription').value = '';
-            document.getElementById('promptTemplate').value = '';
+
+            // Populate file dropdown
+            const select = document.getElementById('promptFileId');
+            select.innerHTML = '<option value="">Select a document...</option>' +
+                files.map(f => `<option value="${f.id}">${f.title}</option>`).join('');
+
             editingPromptId = null;
         }
 
@@ -1007,11 +1179,10 @@
         // Save prompt
         function savePrompt() {
             const name = document.getElementById('promptName').value.trim();
-            const description = document.getElementById('promptDescription').value.trim();
-            const template = document.getElementById('promptTemplate').value.trim();
+            const fileId = parseInt(document.getElementById('promptFileId').value);
 
-            if (!name || !template) {
-                alert('Please enter a name and prompt template');
+            if (!name || !fileId) {
+                alert('Please enter a name and select a document');
                 return;
             }
 
@@ -1020,16 +1191,14 @@
                 const prompt = prompts.find(p => p.id === editingPromptId);
                 if (prompt) {
                     prompt.name = name;
-                    prompt.description = description;
-                    prompt.template = template;
+                    prompt.fileId = fileId;
                 }
             } else {
                 // Create new prompt
                 const prompt = {
                     id: Date.now(),
                     name,
-                    description,
-                    template
+                    fileId
                 };
                 prompts.push(prompt);
             }
@@ -1046,8 +1215,12 @@
 
             editingPromptId = promptId;
             document.getElementById('promptName').value = prompt.name;
-            document.getElementById('promptDescription').value = prompt.description || '';
-            document.getElementById('promptTemplate').value = prompt.template;
+
+            // Populate file dropdown
+            const select = document.getElementById('promptFileId');
+            select.innerHTML = '<option value="">Select a document...</option>' +
+                files.map(f => `<option value="${f.id}" ${f.id === prompt.fileId ? 'selected' : ''}>${f.title}</option>`).join('');
+
             document.getElementById('promptForm').classList.remove('hidden');
         }
 
@@ -1078,17 +1251,120 @@
             document.getElementById('outputPanel').classList.remove('show');
         }
 
-        // Run prompt (simulate AI generation)
-        function runPrompt() {
+        // Run freetext prompt (quick Ask AI)
+        async function runFreetextPrompt() {
+            const freetextPrompt = document.getElementById('freetextPrompt').value.trim();
+
+            if (!freetextPrompt) {
+                alert('Please enter a question or instruction for the AI');
+                return;
+            }
+
+            if (!activeFileId) {
+                alert('Please open or create a document first');
+                return;
+            }
+
+            const apiKey = loadApiKey();
+            if (!apiKey) {
+                alert('Please configure your Claude API key first');
+                showApiKeyModal();
+                return;
+            }
+
+            const file = files.find(f => f.id === activeFileId);
+            if (!file) return;
+
+            // Validate full content
+            if (!file.content || file.content.trim().length === 0) {
+                alert('Please write some content in your document first');
+                return;
+            }
+
+            const freetextBtn = document.getElementById('freetextBtn');
+            freetextBtn.disabled = true;
+            freetextBtn.textContent = 'Asking...';
+
+            // Show output panel
+            document.getElementById('outputPanel').classList.add('show');
+            document.getElementById('outputPanelTitle').textContent = 'AI Response';
+            document.getElementById('outputContent').textContent = 'Generating...';
+
+            try {
+                console.log('Starting AI generation...');
+                const startTime = Date.now();
+
+                // Call the backend API
+                const response = await fetch(`${API_BACKEND_URL}/api/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: freetextPrompt,
+                        text: file.content,
+                        title: file.title || 'Untitled',
+                        api_key: apiKey,
+                        model: 'claude-sonnet-4-5-20250929'
+                    })
+                });
+
+                console.log(`API call completed in ${Date.now() - startTime}ms`);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to generate content');
+                }
+
+                const data = await response.json();
+                document.getElementById('outputContent').textContent = data.content;
+
+                // Optional: Show token usage in console
+                console.log('Token usage:', data.usage);
+
+            } catch (error) {
+                console.error('Error generating content:', error);
+                document.getElementById('outputContent').textContent = `Error: ${error.message}\n\nPlease check:\n- Your API key is valid\n- The backend server is running (http://localhost:8000)\n- Your Anthropic account has credits`;
+
+                if (error.message.includes('Invalid') || error.message.includes('401')) {
+                    setTimeout(() => showApiKeyModal(), 1000);
+                }
+            } finally {
+                freetextBtn.disabled = false;
+                freetextBtn.textContent = 'Ask AI';
+            }
+        }
+
+        // Run prompt with real AI generation
+        async function runPrompt() {
             if (!selectedPromptId || !activeFileId) {
                 alert('Please select a file and a prompt');
                 return;
             }
 
+            const apiKey = loadApiKey();
+            if (!apiKey) {
+                alert('Please configure your Claude API key first');
+                showApiKeyModal();
+                return;
+            }
+
             const prompt = prompts.find(p => p.id === selectedPromptId);
             const file = files.find(f => f.id === activeFileId);
+            const promptFile = files.find(f => f.id === prompt.fileId);
 
             if (!prompt || !file) return;
+
+            if (!promptFile) {
+                alert('The prompt document could not be found. Please edit the function and select a valid document.');
+                return;
+            }
+
+            // Validate full content
+            if (!file.content || file.content.trim().length === 0) {
+                alert('Please write some content in your document first');
+                return;
+            }
 
             const runBtn = document.getElementById('runPromptBtn');
             runBtn.disabled = true;
@@ -1099,26 +1375,44 @@
             document.getElementById('outputPanelTitle').textContent = prompt.name;
             document.getElementById('outputContent').textContent = 'Generating...';
 
-            // Simulate AI generation (replace with actual API call)
-            setTimeout(() => {
-                const fullPrompt = prompt.template.replace('{TEXT}', file.content);
+            try {
+                // Call the backend API using the prompt file's content as the template
+                const response = await fetch(`${API_BACKEND_URL}/api/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: promptFile.content,
+                        text: file.content,
+                        title: file.title || 'Untitled',
+                        api_key: apiKey,
+                        model: 'claude-sonnet-4-5-20250929'
+                    })
+                });
 
-                // Simulated output (in production, this would call an AI API)
-                let output = '';
-                if (prompt.name.includes('Tweet')) {
-                    output = `🚀 Just discovered something amazing! ${file.title} is a game-changer. Here's why you should care... #innovation #tech`;
-                } else if (prompt.name.includes('LinkedIn')) {
-                    output = `Here's the truth nobody tells you about ${file.title}...`;
-                } else if (prompt.name.includes('YouTube')) {
-                    output = `1. "${file.title}: The Complete Guide (2024)"\n2. "Why ${file.title} Changed Everything"\n3. "I Tried ${file.title} For 30 Days - Here's What Happened"`;
-                } else {
-                    output = `Generated content based on: "${file.title}"\n\nThis is a simulated response. In production, this would call an AI API with the prompt:\n\n${fullPrompt}`;
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to generate content');
                 }
 
-                document.getElementById('outputContent').textContent = output;
+                const data = await response.json();
+                document.getElementById('outputContent').textContent = data.content;
+
+                // Optional: Show token usage in console
+                console.log('Token usage:', data.usage);
+
+            } catch (error) {
+                console.error('Error generating content:', error);
+                document.getElementById('outputContent').textContent = `Error: ${error.message}\n\nPlease check:\n- Your API key is valid\n- The backend server is running (http://localhost:8000)\n- Your Anthropic account has credits`;
+
+                if (error.message.includes('Invalid') || error.message.includes('401')) {
+                    setTimeout(() => showApiKeyModal(), 1000);
+                }
+            } finally {
                 runBtn.disabled = false;
                 runBtn.textContent = 'Generate with AI';
-            }, 1500);
+            }
         }
 
         // Copy output to clipboard
@@ -1147,10 +1441,76 @@
             closeOutputPanel();
         }
 
+        // ===== API Key Management =====
+
+        const API_BACKEND_URL = 'http://localhost:8000';
+
+        // Load API key from localStorage
+        function loadApiKey() {
+            return localStorage.getItem('sniptly-api-key') || '';
+        }
+
+        // Save API key to localStorage
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey) {
+                alert('Please enter an API key');
+                return;
+            }
+
+            if (!apiKey.startsWith('sk-ant-')) {
+                alert('Invalid Anthropic API key format. Keys should start with "sk-ant-"');
+                return;
+            }
+
+            localStorage.setItem('sniptly-api-key', apiKey);
+            updateApiKeyStatus();
+            closeApiKeyModal();
+        }
+
+        // Clear API key
+        function clearApiKey() {
+            if (confirm('Are you sure you want to remove your API key?')) {
+                localStorage.removeItem('sniptly-api-key');
+                document.getElementById('apiKeyInput').value = '';
+                updateApiKeyStatus();
+                closeApiKeyModal();
+            }
+        }
+
+        // Show API key modal
+        function showApiKeyModal() {
+            const apiKey = loadApiKey();
+            document.getElementById('apiKeyInput').value = apiKey;
+            document.getElementById('apiKeyModal').classList.add('show');
+            updateApiKeyStatus();
+        }
+
+        // Close API key modal
+        function closeApiKeyModal(event) {
+            if (!event || event.target === document.getElementById('apiKeyModal')) {
+                document.getElementById('apiKeyModal').classList.remove('show');
+            }
+        }
+
+        // Update API key status display
+        function updateApiKeyStatus() {
+            const apiKey = loadApiKey();
+            const statusEl = document.getElementById('apiKeyStatus');
+
+            if (apiKey) {
+                const maskedKey = apiKey.substring(0, 7) + '...' + apiKey.substring(apiKey.length - 4);
+                statusEl.innerHTML = `<div class="api-status configured">✓ API Key configured (${maskedKey})</div>`;
+            } else {
+                statusEl.innerHTML = `<div class="api-status not-configured">⚠ No API key configured</div>`;
+            }
+        }
+
         // Initialize app
         loadTheme();
         loadFiles();
         loadPrompts();
+        updateApiKeyStatus();
     </script>
 </body>
 </html>

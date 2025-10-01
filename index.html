@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -82,6 +84,10 @@
             color: var(--text-primary);
         }
 
+        .theme-toggle .material-symbols-outlined {
+            font-size: 20px;
+        }
+
         .theme-toggle:hover {
             background: var(--bg-secondary);
             border-color: var(--text-secondary);
@@ -98,6 +104,9 @@
             font-weight: 500;
             transition: all 0.2s;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .new-file-btn:hover {
@@ -813,6 +822,117 @@
             background: rgba(239, 68, 68, 0.1);
             color: #ef4444;
         }
+
+        /* Markdown Preview */
+        .markdown-preview {
+            width: 100%;
+            font-size: 18px;
+            line-height: 1.8;
+            font-family: 'Source Serif 4', 'Georgia', serif;
+            color: var(--text-primary);
+        }
+
+        .markdown-preview h1, .markdown-preview h2, .markdown-preview h3,
+        .markdown-preview h4, .markdown-preview h5, .markdown-preview h6 {
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            line-height: 1.3;
+            color: var(--text-primary);
+        }
+
+        .markdown-preview h1 { font-size: 32px; }
+        .markdown-preview h2 { font-size: 28px; }
+        .markdown-preview h3 { font-size: 24px; }
+        .markdown-preview h4 { font-size: 20px; }
+        .markdown-preview h5 { font-size: 18px; }
+        .markdown-preview h6 { font-size: 16px; }
+
+        .markdown-preview p {
+            margin-bottom: 16px;
+        }
+
+        .markdown-preview ul, .markdown-preview ol {
+            margin-bottom: 16px;
+            padding-left: 20px;
+        }
+
+        .markdown-preview li {
+            margin-bottom: 8px;
+        }
+
+        .markdown-preview li > p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .markdown-preview code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 16px;
+        }
+
+        .markdown-preview pre {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+        }
+
+        .markdown-preview pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .markdown-preview blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .markdown-preview a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .markdown-preview a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-preview hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 24px 0;
+        }
+
+        .markdown-preview table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .markdown-preview th, .markdown-preview td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .markdown-preview th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        .markdown-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
     </style>
 </head>
 <body>
@@ -821,12 +941,18 @@
         <h1>Sniptly</h1>
         <div class="header-controls">
             <button class="theme-toggle" onclick="showApiKeyModal()" aria-label="API Settings" title="Claude API Key">
-                🔑
+                <span class="material-symbols-outlined">key</span>
             </button>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                <span id="themeIcon">☀️</span>
+                <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
             </button>
-            <button class="new-file-btn" onclick="createNewFile()">+ New File</button>
+            <button class="theme-toggle" id="previewToggle" onclick="togglePreview()" aria-label="Toggle preview" title="Toggle Markdown Preview" style="display: none;">
+                <span class="material-symbols-outlined" id="previewIcon">visibility</span>
+            </button>
+            <button class="new-file-btn" onclick="createNewFile()">
+                <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 4px;">add</span>
+                New File
+            </button>
         </div>
     </header>
 
@@ -943,6 +1069,14 @@
         let prompts = [];
         let selectedPromptId = null;
         let editingPromptId = null;
+        let isPreviewMode = false;
+
+        // Initialize markdown-it
+        const md = window.markdownit({
+            html: true,
+            linkify: true,
+            typographer: true
+        });
 
         // Load files from localStorage on startup
         function loadFiles() {
@@ -1016,6 +1150,9 @@
             const file = files.find(f => f.id === fileId);
             if (!file) return;
 
+            // Reset preview mode when switching files
+            isPreviewMode = false;
+
             const editorPanel = document.getElementById('editorPanel');
             editorPanel.innerHTML = `
                 <div class="editor-wrapper">
@@ -1023,9 +1160,10 @@
                            placeholder="Untitled"
                            oninput="updateTitle(${fileId}, this.value); autoResize(this);"
                            rows="1">${file.title || ''}</textarea>
-                    <textarea class="editor-content"
+                    <textarea class="editor-content" id="editorContent"
                               placeholder="Start writing..."
                               oninput="updateContent(${fileId}, this.value); autoResize(this);">${file.content || ''}</textarea>
+                    <div class="markdown-preview hidden" id="markdownPreview"></div>
                     <div class="word-count" id="wordCount">
                         <span>0 words</span>
                         <span>•</span>
@@ -1036,6 +1174,9 @@
             renderFileList();
             updateWordCount(fileId);
 
+            // Show preview toggle button
+            document.getElementById('previewToggle').style.display = 'flex';
+
             // Add event listener for real-time word count updates
             const titleTextarea = editorPanel.querySelector('.editor-title');
             const contentTextarea = editorPanel.querySelector('.editor-content');
@@ -1043,6 +1184,9 @@
             contentTextarea.addEventListener('input', () => {
                 updateWordCount(fileId);
                 autoResize(contentTextarea);
+                if (isPreviewMode) {
+                    renderMarkdownPreview();
+                }
             });
 
             // Initial resize for both textareas
@@ -1111,8 +1255,38 @@
 
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
-            // Use simple circle for light mode, filled circle for dark mode
-            icon.textContent = theme === 'light' ? '○' : '●';
+            icon.textContent = theme === 'light' ? 'light_mode' : 'dark_mode';
+        }
+
+        // Toggle markdown preview
+        function togglePreview() {
+            isPreviewMode = !isPreviewMode;
+            const editorContent = document.getElementById('editorContent');
+            const markdownPreview = document.getElementById('markdownPreview');
+            const previewIcon = document.getElementById('previewIcon');
+
+            if (isPreviewMode) {
+                // Switch to preview mode
+                editorContent.classList.add('hidden');
+                markdownPreview.classList.remove('hidden');
+                previewIcon.textContent = 'edit';
+                renderMarkdownPreview();
+            } else {
+                // Switch to edit mode
+                editorContent.classList.remove('hidden');
+                markdownPreview.classList.add('hidden');
+                previewIcon.textContent = 'visibility';
+            }
+        }
+
+        // Render markdown preview
+        function renderMarkdownPreview() {
+            const file = files.find(f => f.id === activeFileId);
+            if (!file) return;
+
+            const markdownPreview = document.getElementById('markdownPreview');
+            const html = md.render(file.content || '');
+            markdownPreview.innerHTML = html;
         }
 
         // ===== AI Functions =====

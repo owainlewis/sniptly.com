@@ -1,7 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(open index.html)"
+      "Bash(open index.html)",
+      "Bash(git checkout:*)",
+      "Bash(rustc --version)",
+      "Bash(curl:*)",
+      "Bash(sh:*)",
+      "Bash(source $HOME/.cargo/env)",
+      "Bash(cargo install:*)",
+      "Bash(cargo tauri init:*)",
+      "Bash(cargo tauri:*)",
+      "Bash($HOME/.cargo/bin/cargo tauri build --debug)",
+      "Bash(ls:*)",
+      "Read(//Users/owainlewis/.cargo/bin/**)",
+      "Bash(/Users/owainlewis/.cargo/bin/cargo-tauri build --debug)",
+      "Bash(chmod:*)",
+      "Bash(bash:*)",
+      "Bash($HOME/.cargo/bin/cargo-tauri build --debug)",
+      "Bash(open /Users/owainlewis/Projects/sniptly/src-tauri/target/debug/bundle/macos/Sniptly.app)",
+      "Bash(open .)",
+      "Bash(open:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
